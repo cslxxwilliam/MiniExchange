@@ -23,7 +23,7 @@ public class MiniExchange {
 
             System.out.println("Fills " + currMatch);
 
-            if (bidPolled != null && bidPolled.isFullyFilled()) {
+            if (bidPolled != null && !bidPolled.isFullyFilled()) {
                 bids.add(bidPolled);
             }
 
