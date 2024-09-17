@@ -100,7 +100,31 @@ public class MiniExchangeTest {
     }
 
     @Test
-    public void oneBidOrdersHittingMultipleAskOrderMatchingTest() {
+    public void oneBidOrdersHittingMultipleAskOrderLevelTest() {
+        MiniExchange miniExchange = new MiniExchange();
+
+        Order order1 = new Order("B1", Side.BUY, 5.0, 50);
+        Order order2 = new Order("B2", Side.BUY, 5.1, 30);
+        Order order3 = new Order("S1", Side.SELL, 5.0, 100);
+
+        List<Fill> fillsAfterB1 = miniExchange.add(order1);
+        List<Fill> fillsAfterB2 = miniExchange.add(order2);
+        List<Fill> fillsAfterS1 = miniExchange.add(order3);
+
+        assertEquals(0, fillsAfterB1.size());
+        assertEquals(0, fillsAfterB2.size());
+
+        assertEquals(2, fillsAfterS1.size());
+
+        assertEquals(5.1, fillsAfterS1.get(0).getPx(), 0.001);
+        assertEquals(30, fillsAfterS1.get(0).getQty());
+
+        assertEquals(5.0, fillsAfterS1.get(1).getPx(), 0.001);
+        assertEquals(50, fillsAfterS1.get(1).getQty());
+    }
+
+    @Test
+    public void pricesAreTheSameAndMatchedBasedOnEntryTimeTest() {
         MiniExchange miniExchange = new MiniExchange();
 
         Order order1 = new Order("B1", Side.BUY, 5.1, 50);
@@ -121,11 +145,6 @@ public class MiniExchangeTest {
 
         assertEquals(5.1, fillsAfterS1.get(1).getPx(), 0.001);
         assertEquals(30, fillsAfterS1.get(1).getQty());
-    }
-
-    @Test
-    public void pricesAreTheSameAndMatchedBasedOnEntryTimeTest() {
-
     }
 
     @Test

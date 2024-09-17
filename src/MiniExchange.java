@@ -34,17 +34,17 @@ public class MiniExchange {
                 moreToMatch = false;
             }
 
-            System.out.println("Fills " + matched);
+            System.out.println("Fills " + currMatch);
 
             //create the unfilled orders for further matching
-            Order pendingFillBidOrder = calculatePendingFill(bidPolled, matched);
+            Order pendingFillBidOrder = calculatePendingFill(bidPolled, currMatch);
 
             if (pendingFillBidOrder != null) {
                 bids.add(pendingFillBidOrder);
             }
 
             //create the unfilled orders for further matching
-            Order pendingFillAskOrder = calculatePendingFill(askPolled, matched);
+            Order pendingFillAskOrder = calculatePendingFill(askPolled, currMatch);
 
             if (pendingFillAskOrder != null) {
                 asks.add(pendingFillAskOrder);
@@ -84,25 +84,4 @@ public class MiniExchange {
         return Collections.emptyList();
     }
 
-    private static class BidOrdersComparator implements Comparator<Order> {
-        @Override
-        public int compare(Order o1, Order o2) {
-            if (o1.getPx() == o2.getPx()) {
-                return 0;
-            }
-
-            return o1.getPx() > o2.getPx() ? 1 : -1;
-        }
-    }
-
-    private static class AskOrdersComparator implements Comparator<Order> {
-        @Override
-        public int compare(Order o1, Order o2) {
-            if (o1.getPx() == o2.getPx()) {
-                return 0;
-            }
-
-            return o1.getPx() < o2.getPx() ? 1 : -1;
-        }
-    }
 }
