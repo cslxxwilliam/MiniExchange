@@ -1,13 +1,13 @@
 public class Fill {
-    private final int qty;
+    private final double qty;
     private final double px;
 
-    public Fill(int qty, double px) {
+    public Fill(double qty, double px) {
         this.qty = qty;
         this.px = px;
     }
 
-    public int getQty() {
+    public double getQty() {
         return qty;
     }
 

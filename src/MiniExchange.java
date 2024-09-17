@@ -1,6 +1,5 @@
 import java.util.*;
 
-import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class MiniExchange {
@@ -15,73 +14,49 @@ public class MiniExchange {
         }
 
         List<Fill> matched = new ArrayList<>();
-        boolean moreToMatch = true;
-        while (moreToMatch) {
-            Order bidPeaked = bids.peek();
-            Order askPeaked = asks.peek();
-
-            if (bidPeaked == null || askPeaked == null) {
-                break;
-            }
-
+        while (hasMatch()) {
             Order bidPolled = bids.poll();
             Order askPolled = asks.poll();
 
-            List<Fill> currMatch = match(bidPolled, askPolled);
-            matched.addAll(currMatch);
-
-            if (currMatch.isEmpty()) {
-                moreToMatch = false;
-            }
+            Fill currMatch = match(bidPolled, askPolled);
+            matched.add(currMatch);
 
             System.out.println("Fills " + currMatch);
 
-            //create the unfilled orders for further matching
-            Order pendingFillBidOrder = calculatePendingFill(bidPolled, currMatch);
-
-            if (pendingFillBidOrder != null) {
-                bids.add(pendingFillBidOrder);
+            if (bidPolled != null && bidPolled.isFullyFilled()) {
+                bids.add(bidPolled);
             }
 
-            //create the unfilled orders for further matching
-            Order pendingFillAskOrder = calculatePendingFill(askPolled, currMatch);
-
-            if (pendingFillAskOrder != null) {
-                asks.add(pendingFillAskOrder);
+            if (askPolled != null && !askPolled.isFullyFilled()) {
+                asks.add(askPolled);
             }
         }
 
         return matched;
     }
 
-    private Order calculatePendingFill(Order origOrder, List<Fill> matched) {
-        int pendingFillQty = calculatePendingFillQty(origOrder.getQty(), matched);
+    private boolean hasMatch() {
+        Order bidPeaked = bids.peek();
+        Order askPeaked = asks.peek();
 
-        if (pendingFillQty == 0) {
-            return null;
-        }
-        return new Order(origOrder.getOrdId(), origOrder.getSide(), origOrder.getPx(),
-                pendingFillQty);
-    }
-
-    private int calculatePendingFillQty(int qty, List<Fill> matched) {
-        if (matched == null || matched.isEmpty()) {
-            return qty;
+        if (bidPeaked == null || askPeaked == null) {
+            return false;
         }
 
-        System.out.printf("Original qty:%s, matched qty:%s\n", qty, matched);
-        return max(qty - matched.get(0).getQty(), 0);
+        return bidPeaked.getPx() >= askPeaked.getPx();
     }
 
-    private List<Fill> match(Order bid, Order ask) {
-        if (bid == null || ask == null) return Collections.emptyList();
+    private Fill match(Order bid, Order ask) {
+        if (bid == null || ask == null) return null;
 
         if (bid.getPx() >= ask.getPx()) {
-            ArrayList<Fill> fills = new ArrayList<>();
-            fills.add(new Fill(min(bid.getQty(), ask.getQty()), bid.getPx()));
-            return fills;
+            Fill fill = new Fill(min(bid.getPendingFillQty(), ask.getPendingFillQty()), bid.getPx());
+            bid.addFill(fill);
+            ask.addFill(fill);
+            return fill;
         }
-        return Collections.emptyList();
+
+        return null;
     }
 
 }
