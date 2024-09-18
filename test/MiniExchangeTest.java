@@ -6,15 +6,16 @@ import static org.junit.Assert.assertEquals;
 
 public class MiniExchangeTest {
     @Test
-    public void basicInputTest() {
+    public void basicTest() {
         MiniExchange miniExchange = new MiniExchange();
 
         Order order1 = new Order("B1", Side.BUY, 4.9, 100);
         Order order2 = new Order("B2", Side.BUY, 5.0, 100);
-        miniExchange.add(order1);
-        List<Fill> fills = miniExchange.add(order2);
+        List<Fill> fillsAfterB1 = miniExchange.add(order1);
+        List<Fill> fillsAfterB2 = miniExchange.add(order2);
 
-        assertEquals(fills.size(), 0);
+        assertEquals(fillsAfterB1.size(), 0);
+        assertEquals(fillsAfterB2.size(), 0);
     }
 
     @Test
