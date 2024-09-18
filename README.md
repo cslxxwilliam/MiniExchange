@@ -1,9 +1,9 @@
 # Exchange Orders Matching Engine
 ## Description
-**Mini Engine** (<code>matchingEngine-1.0.jar</code>) is a Java application serving as a mini financial exchange orders matching engine. The algorithm is based on the price/time priority.
+**Mini Engine** (<code>miniEngine-1.0.jar</code>) is a Java application serving as a mini financial exchange orders matching engine. The algorithm is based on the price/time priority.
 
 ## Requirements and Dependencies
-Matching Engine requires Java 14.
+Mini Engine requires Java 14.
 
 It is a Maven project (see pom.xml, file Apache Maven 3.8.1 is recommended) and depends on:
 * JUnit 4.13.2
@@ -15,7 +15,7 @@ Build the application using:
 
 <code>mvn clean install</code>
 
-Resulting matchingEngine-1.0.jar JAR file will be created in <code>target</code> sub-folder.
+Resulting miniEngine-1.0.jar JAR file will be created in <code>target</code> sub-folder.
 
 This JAR file is a standalone JAR that contains all dependencies required to run the application.
 
